@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "51c51939-97b4-450c-ab7d-d0afb4c94304": {
+      "ProjectGuid": "51c51939-97b4-450c-ab7d-d0afb4c94304",
+      "DisplayName": "Parser",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
