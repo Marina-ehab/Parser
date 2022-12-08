@@ -8,19 +8,19 @@
     "net6.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Marina Ehab\\.nuget\\packages\\": {}
+    "C:\\Users\\pc\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Marina Ehab\\compilers\\project\\Parser\\Parser\\Parser.csproj",
+      "projectUniqueName": "C:\\Users\\pc\\OneDrive\\Desktop\\Parser\\Parser\\Parser.csproj",
       "projectName": "Parser",
-      "projectPath": "C:\\Users\\Marina Ehab\\compilers\\project\\Parser\\Parser\\Parser.csproj",
-      "packagesPath": "C:\\Users\\Marina Ehab\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Marina Ehab\\compilers\\project\\Parser\\Parser\\obj\\",
+      "projectPath": "C:\\Users\\pc\\OneDrive\\Desktop\\Parser\\Parser\\Parser.csproj",
+      "packagesPath": "C:\\Users\\pc\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\pc\\OneDrive\\Desktop\\Parser\\Parser\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Marina Ehab\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\pc\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -63,7 +63,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }
