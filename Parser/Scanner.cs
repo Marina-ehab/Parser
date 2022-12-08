@@ -25,7 +25,7 @@ namespace Parser
 
         public void GoBackTokens(int returnIndex)
         {
-            this.returnIndex = returnIndex;
+            this.returnIndex += returnIndex;
         }
 
         public Token? GetNextToken()
