@@ -19,11 +19,15 @@ namespace Parser
         public TokenType tokenType;
         public String tokenValue;
         public String printText;
-        public Token(TokenType tokenType, string tokenValue, string printText)
+        public int line;
+        public int column;
+        public Token(TokenType tokenType, string tokenValue, string printText, int line, int column)
         {
             this.tokenType = tokenType;
             this.tokenValue = tokenValue;
             this.printText = printText;
+            this.line = line;
+            this.column = column;
         }
     }
 }
