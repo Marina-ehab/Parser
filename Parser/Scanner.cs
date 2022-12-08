@@ -8,10 +8,12 @@ namespace Parser
 {
     internal class Scanner
     {
+        List<Token> tokens = new List<Token>();
         private String tinyCode;
         private int index;
         private int line = 1;
         private int column = 1;
+        private int returnIndex = 0;
         private static Dictionary<String, String>? symbolNameDict = null;
         private static HashSet<String>? reservedWords = null;
 
@@ -21,11 +23,18 @@ namespace Parser
             index = 0;
         }
 
+        public void GoBackTokens(int returnIndex)
+        {
+            this.returnIndex += returnIndex;
+        }
+
         public Token? GetNextToken()
         {
+            if (this.returnIndex > 0)
+                return this.tokens[tokens.Count - returnIndex--];
             String state = "START";
             String lexeme = "";
-            while (index < tinyCode.Length)
+            while ((index < tinyCode.Length) || state != "START")
             {
                 switch (state)
                 {
@@ -44,6 +53,8 @@ namespace Parser
                                     ++column;
                                 }
                                 ++index;
+                                if (index >= tinyCode.Length)
+                                    throw new Exception("Error at line " + line + " near column " + column + ". Unclosed comment");
                             }
                             ++index;
                             ++column;
@@ -76,11 +87,12 @@ namespace Parser
                         {
                             ++index;
                             ++column;
-                            return new Token(TokenType.Symbol, tinyCode[index - 1].ToString(), GetSymbolDict()[tinyCode[index - 1].ToString()]);
+                            tokens.Add(new Token(TokenType.Symbol, tinyCode[index - 1].ToString(), GetSymbolDict()[tinyCode[index - 1].ToString()], line, column));
+                            return tokens.Last();
                         }
                         else
                         {
-                            throw new Exception("Error at line " + line + " near column " + column);
+                            throw new Exception("Error at line " + line + " near column " + column + ". Unknown character");
                         }
                         ++index;
                         ++column;
@@ -92,7 +104,8 @@ namespace Parser
                             ++index;
                             ++column;
                         }
-                        return new Token(TokenType.Number, lexeme, "Number");
+                        tokens.Add(new Token(TokenType.Number, lexeme, "Number", line, column));
+                        return tokens.Last();
                     case "INID":
                         while (index < tinyCode.Length && ((tinyCode[index] >= 'A' && tinyCode[index] <= 'Z') || (tinyCode[index] >= 'a' && tinyCode[index] <= 'z')))
                         {
@@ -100,19 +113,28 @@ namespace Parser
                             ++index;
                             ++column;
                         }
-                        if (GetReservedSet().Contains(lexeme)) return new Token(TokenType.Reserved, lexeme, lexeme.ToUpper());
-                        else return new Token(TokenType.Identifier, lexeme, "Identifier");
+                        if (GetReservedSet().Contains(lexeme))
+                        {
+                            tokens.Add(new Token(TokenType.Reserved, lexeme, lexeme.ToUpper(), line, column));
+                            return tokens.Last();
+                        }
+                        else
+                        {
+                            tokens.Add(new Token(TokenType.Identifier, lexeme, "Identifier", line, column));
+                            return tokens.Last();
+                        }
                     case "INASSIGN":
-                        if (tinyCode[index] == '=')
+                        if (index < tinyCode.Length && tinyCode[index] == '=')
                         {
                             lexeme += tinyCode[index];
                             ++index;
                             ++column;
-                            return new Token(TokenType.Symbol, lexeme, GetSymbolDict()[lexeme]);
+                            tokens.Add(new Token(TokenType.Symbol, lexeme, GetSymbolDict()[lexeme], line, column));
+                            return tokens.Last();
                         }
                         else
                         {
-                            throw new Exception("Error at line " + line + " near column " + column);
+                            throw new Exception("Error at line " + line + " near column " + column + ". Colon without equal sign");
                         }
                 }
             }
