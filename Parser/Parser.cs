@@ -110,10 +110,91 @@ namespace Parser
 
             return assign_stmt;
         }
-        private Node write_stmt();
-        private Node read_stmt();
-        private Node repeat_stmt();
-        private Node if_stmt();
+
+        private Node write_stmt()
+        { 
+            Node write_node=new Node(NodeType.WriteStmt);
+
+            var top=peek();
+            
+            if(top.tokenValue="write")
+            { 
+                write_node.AddChild(new Node(value:"write"));
+                match();
+            }
+            else
+            { 
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");           
+            }
+            write_node.AddChild(exp());
+
+            return write_node;
+        }
+        private Node read_stmt()
+        { 
+            Node read_node=new Node(NodeType.ReadStmt);
+
+            var top=peek();
+
+            if(top.tokenValue=="read")
+            { 
+                read_node.AddChild(new Node(value:"read"));
+                match();
+            }
+            else
+            { 
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                   
+            }
+            top=peek();
+
+            if(top.tokenType==TokenType.Identifier)
+            { 
+                read_node.AddChild(new Node(value:("Identifier ("+top.tokenValue+")")));
+                match();
+            }
+            else
+            { 
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Can't read Non-identifiers");
+                   
+            }
+            return read_node;
+        }
+        private Node repeat_stmt()
+        { 
+            Node repeat_node=new Node(NodeType.RepeatStmt);
+            var top=peek();
+            if(top.tokenValue=="repeat")
+            { 
+                repeat_node.AddChild(new Node(value:"repeat"));
+                match();
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                   
+            }
+            repeat_node.AddChild(stmt_sequence());
+
+            top=peek();
+            if(top.tokenValue=="until")
+            { 
+                repeat_node.AddChild(new Node(value:"until");
+                match();
+            }
+            else
+            { 
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error(expected until)");
+            }
+            repeat_node.AddChild(exp());
+
+            return repeat_node;
+
+        }
+        private Node if_stmt()
+        {
+
+        }
         private Node exp();
         private Node term();
         private Node simple_exp();
