@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pc\\OneDrive\\Desktop\\Parser\\Parser\\Parser.csproj",
+      "projectUniqueName": "C:\\E_But_FAST\\Senior-2\\Compilers\\Parser\\Parser\\Parser.csproj",
       "projectName": "Parser",
-      "projectPath": "C:\\Users\\pc\\OneDrive\\Desktop\\Parser\\Parser\\Parser.csproj",
+      "projectPath": "C:\\E_But_FAST\\Senior-2\\Compilers\\Parser\\Parser\\Parser.csproj",
       "packagesPath": "C:\\Users\\pc\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pc\\OneDrive\\Desktop\\Parser\\Parser\\obj\\",
+      "outputPath": "C:\\E_But_FAST\\Senior-2\\Compilers\\Parser\\Parser\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pc\\AppData\\Roaming\\NuGet\\NuGet.Config",
