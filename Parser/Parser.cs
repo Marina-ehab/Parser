@@ -81,7 +81,35 @@ namespace Parser
             return statement;
         }
 
-        private Node assign_stmt();
+        private Node assign_stmt()
+        { 
+            Node assign_stmt = new Node(NodeType.AssignStmt);
+            var top=peek();
+            if(top?.tokenType == TokenType.Identifier)
+            { 
+                assign_stmt.AddChild(new Node(value:"Identifier"+"("+top.tokenValue)+")");
+                match();
+            }
+            else
+            { 
+               throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Assigning non identifier");
+                   
+            }
+            top = peek();
+            if(top.tokenType==TokenType.Symbol && top.tokenValue==":=")
+            { 
+                assign_stmt.AddChild(new Node(value:":="));
+                match();
+            }
+            else
+            { 
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". use := for assignment");             
+            }
+            /*maybe a bug*/
+            assign_stmt.AddChild(exp());
+
+            return assign_stmt;
+        }
         private Node write_stmt();
         private Node read_stmt();
         private Node repeat_stmt();
