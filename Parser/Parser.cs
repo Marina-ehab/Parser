@@ -193,6 +193,55 @@ namespace Parser
         }
         private Node if_stmt()
         {
+            Node if_node =new Node(NodeType.IfStmt);
+            var top=peek();
+            //if part
+            if(top.tokenValue=="if")
+            { 
+                match();
+                if_node.AddChild(new Node(value:"if"));
+            }
+            else
+            { 
+              throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+            }
+            //call exp procedure
+            if_node.AddChild(exp());  
+
+            //then part
+            top.peek();
+            if(top.tokenValue=="then")
+            { 
+                match();
+                if_node.AddChild(new Node(value:"then"));
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+            }
+            //stmt-seq call
+            if_node.AddChild(stmt_sequence());
+            //else part is optional either else or end 
+            top=peek();
+            if(top.tokenValue=="else")
+            { 
+                if_node.AddChild(new Node(value:"else"));
+                match();
+                if_node.AddChild(stmt_sequence());
+            }
+            top.peek(); //redundant if we dont have an else
+            //end part
+            if(top.tokenValue=="end")
+            {
+                if_node.AddChild(new Node(value:"end"));
+                match();
+            }
+            else
+            { 
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error(missing end)");
+            
+            }
+            return if_node;
 
         }
         private Node exp();
