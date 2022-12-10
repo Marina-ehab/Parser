@@ -117,7 +117,7 @@ namespace Parser
 
             var top=peek();
             
-            if(top.tokenValue="write")
+            if(top.tokenValue=="write")
             { 
                 write_node.AddChild(new Node(value:"write"));
                 match();
