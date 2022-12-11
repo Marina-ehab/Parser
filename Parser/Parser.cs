@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -95,11 +95,6 @@ namespace Parser
             return statement;
         }
 
-        private Node assign_stmt();
-        private Node write_stmt();
-        private Node read_stmt();
-        private Node repeat_stmt();
-        private Node if_stmt();
         private Node exp()
         {
             Node exp = new Node(NodeType.Expression);
@@ -118,12 +113,6 @@ namespace Parser
                 
             return exp;
         }
-
-        private Node term();
-        private Node simple_exp();
-        private Node factor();
-        private Node mulop();
-        private Node addop();
         
         private Node comparisonop()
         {
@@ -147,6 +136,285 @@ namespace Parser
                     throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Colon without equal sign");
             }
             return comparisonop;
+        }
+        private Node assign_stmt()
+        {
+            Node assign_stmt = new Node(NodeType.AssignStmt);
+            var top = peek();
+            if (top?.tokenType == TokenType.Identifier)
+            {
+                assign_stmt.AddChild(new Node(NodeType.Identifier, top.tokenValue));
+                match();
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Assigning non identifier");
+
+            }
+            top = peek();
+            if (top.tokenType == TokenType.Symbol && top.tokenValue == ":=")
+            {
+                assign_stmt.AddChild(new Node(value: ":="));
+                match();
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". use := for assignment");
+            }
+            /*maybe a bug*/
+            assign_stmt.AddChild(exp());
+
+            return assign_stmt;
+        }
+
+        private Node write_stmt()
+        {
+            Node write_node = new Node(NodeType.WriteStmt);
+
+            var top = peek();
+
+            if (top.tokenValue == "write")
+            {
+                write_node.AddChild(new Node(value: "write"));
+                match();
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+            }
+            write_node.AddChild(exp());
+
+            return write_node;
+        }
+        private Node read_stmt()
+        {
+            Node read_node = new Node(NodeType.ReadStmt);
+
+            var top = peek();
+
+            if (top.tokenValue == "read")
+            {
+                read_node.AddChild(new Node(value: "read"));
+                match();
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
+            }
+            top = peek();
+
+            if (top.tokenType == TokenType.Identifier)
+            {
+                read_node.AddChild(new Node(value: ("Identifier (" + top.tokenValue + ")")));
+                match();
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Can't read Non-identifiers");
+
+            }
+            return read_node;
+        }
+        private Node repeat_stmt()
+        {
+            Node repeat_node = new Node(NodeType.RepeatStmt);
+            var top = peek();
+            if (top.tokenValue == "repeat")
+            {
+                repeat_node.AddChild(new Node(value: "repeat"));
+                match();
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
+            }
+            repeat_node.AddChild(stmt_sequence());
+
+            top = peek();
+            if (top.tokenValue == "until")
+            {
+                repeat_node.AddChild(new Node(value: "until"));
+                match();
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error(expected until)");
+            }
+            repeat_node.AddChild(exp());
+
+            return repeat_node;
+
+        }
+        private Node if_stmt()
+        {
+            Node if_node = new Node(NodeType.IfStmt);
+            var top = peek();
+            //if part
+            if (top.tokenValue == "if")
+            {
+                match();
+                if_node.AddChild(new Node(value: "if"));
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+            }
+            //call exp procedure
+            if_node.AddChild(exp());
+
+            //then part
+            top = peek();
+            if (top.tokenValue == "then")
+            {
+                match();
+                if_node.AddChild(new Node(value: "then"));
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+            }
+            //stmt-seq call
+            if_node.AddChild(stmt_sequence());
+            //else part is optional either else or end 
+            top = peek();
+            if (top.tokenValue == "else")
+            {
+                if_node.AddChild(new Node(value: "else"));
+                match();
+                if_node.AddChild(stmt_sequence());
+            }
+            top = peek(); //redundant if we dont have an else
+            //end part
+            if (top.tokenValue == "end")
+            {
+                if_node.AddChild(new Node(value: "end"));
+                match();
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error(missing end)");
+
+            }
+            return if_node;
+
+        }
+        private Node term() { 
+            //term --> factor {mulop factor }
+            Node term = new Node(NodeType.Term);
+            term.AddChild(factor());
+            while (peek()?.tokenValue == "*"|| peek()?.tokenValue == "/")
+            {
+                term.AddChild(mulop());
+                term.AddChild(factor());
+            }
+            return term;
+        }
+        private Node simple_exp() { 
+            //simple exp--> term {addop term}
+            Node simple_exp = new Node(NodeType.SimpleExpression );
+            simple_exp.AddChild(term());
+            while (peek()?.tokenValue == "+"|| peek()?.tokenValue == "-") { 
+                simple_exp.AddChild(addop());
+                simple_exp.AddChild(term());
+            }
+            return simple_exp;
+        }
+        private Node factor() { 
+            //factor -->(exp)|number|identifier
+            Node factor = new Node(NodeType.Factor);
+            var checktop = peek();
+            switch (checktop?.tokenValue) {
+                case "(":
+                    factor.AddChild(new Node(value: "("));
+                    match();
+                    factor.AddChild(exp());
+                    if (peek()?.tokenValue == ")")
+                    {
+                        factor.AddChild(new Node(value: ")"));
+                        match();
+                    }
+                    else {
+                        throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+                    }
+                    break;
+
+				default:
+                    switch (peek()?.tokenType)
+                    {
+                        case TokenType.Number:
+                            if (checktop?.tokenType == TokenType.Number)
+                            {
+                                new Node(type: NodeType.Number, value: checktop.tokenValue);
+                                match();
+                            }
+                            else
+                            {
+                                throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+
+                            }
+                            break;
+
+                        case TokenType.Identifier:
+                            if (checktop?.tokenType == TokenType.Identifier)
+                            {
+                                new Node(type: NodeType.Identifier, value: checktop.tokenValue);
+                                match();
+                            }
+                            else
+                            {
+                                throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+
+                            }
+                            break;
+                        default:
+                            throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax Error");
+
+                    }
+                    break;
+
+            }
+            return factor;
+        }
+        private Node mulop() {
+            //mulop --> *|/
+            Node mulop = new Node(NodeType.Mulop);
+            var checktop = peek(); 
+            switch (checktop?.tokenValue)
+            {
+                case "*":
+                    mulop.AddChild(new Node(value: "*"));
+                    match();
+                    break;
+                case "/":
+                    mulop.AddChild(new Node(value: "/"));
+                    match();
+                    break;
+                default:
+                    throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " expected (* or /)");
+
+            }
+            return mulop;
+        }
+        private Node addop() { 
+            //addop --> +|-
+            Node addop = new Node(NodeType.Addop);
+            var checktop = peek(); //check next token 
+            switch (checktop?.tokenValue) {
+                case "+":
+                    addop.AddChild(new Node(value:"+"));
+                    match();
+                    break;
+                case "-":
+                    addop.AddChild(new Node(value: "-"));
+                    match();
+                    break;
+                default:
+                    throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " expected (+ or -)");
+
+            }
+            return addop;
         }
     }
 }
