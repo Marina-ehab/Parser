@@ -88,7 +88,7 @@ namespace Parser
                             break;
                         default:
                             // an Exception is thrown when there's a syntax error 
-                            throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Colon without equal sign");
+                            throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
                     }
                     break;
             }
@@ -133,7 +133,7 @@ namespace Parser
                 default:
                     // actually this line is impossible to reach, as we checked top value in exp() before calling compariosnop()
                     // but you know IT'S THE LAW
-                    throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Colon without equal sign");
+                    throw new Exception("Error at line " + top?.line + " near column " + top?.column);
             }
             return comparisonop;
         }
@@ -148,7 +148,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Assigning non identifier");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
 
             }
             top = peek();
@@ -159,7 +159,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". use := for assignment");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
             }
             /*maybe a bug*/
             assign_stmt.AddChild(exp());
@@ -211,7 +211,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Can't read Non-identifiers");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
 
             }
             return read_node;
@@ -240,7 +240,8 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error(expected until)");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
             }
             repeat_node.AddChild(exp());
 
@@ -260,6 +261,7 @@ namespace Parser
             else
             {
                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
             }
             //call exp procedure
             if_node.AddChild(exp());
@@ -274,6 +276,7 @@ namespace Parser
             else
             {
                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
             }
             //stmt-seq call
             if_node.AddChild(stmt_sequence());
@@ -294,7 +297,8 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error(missing end)");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
 
             }
             return if_node;
@@ -342,7 +346,8 @@ namespace Parser
                     }
                     else
                     {
-                        throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+                        throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
                     }
                     break;
 
@@ -357,7 +362,8 @@ namespace Parser
                             }
                             else
                             {
-                                throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+                                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
 
                             }
                             break;
@@ -370,12 +376,14 @@ namespace Parser
                             }
                             else
                             {
-                                throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+                                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
 
                             }
                             break;
                         default:
-                            throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax Error");
+                            throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
 
                     }
                     break;
@@ -399,7 +407,8 @@ namespace Parser
                     match();
                     break;
                 default:
-                    throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " expected (* or /)");
+                    throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
 
             }
             return mulop;
@@ -420,7 +429,8 @@ namespace Parser
                     match();
                     break;
                 default:
-                    throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " expected (+ or -)");
+                    throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
 
             }
             return addop;
