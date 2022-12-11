@@ -91,11 +91,10 @@ namespace Parser
             //term --> factor {mulop factor }
             Node term = new Node(NodeType.Term);
             term.AddChild(factor());
-            while (peek()?.tokenValue == "addop")
+            while (peek()?.tokenValue == "*"|| peek()?.tokenValue == "/")
             {
-                match();
-                term.AddChild(new Node(value: "mulop"));
-                term.AddChild(new Node(value: "factor"));
+                term.AddChild(mulop());
+                term.AddChild(factor());
             }
             return term;
         }
@@ -103,10 +102,9 @@ namespace Parser
             //simple exp--> term {addop term}
             Node simple_exp = new Node(NodeType.SimpleExpression );
             simple_exp.AddChild(term());
-            while (peek()?.tokenValue == "addop") { 
-                match();
-                simple_exp.AddChild(new Node(value: "addop"));
-                simple_exp.AddChild(new Node(value: "term"));
+            while (peek()?.tokenValue == "+"|| peek()?.tokenValue == "-") { 
+                simple_exp.AddChild(addop());
+                simple_exp.AddChild(term());
             }
             return simple_exp;
         }
@@ -114,41 +112,54 @@ namespace Parser
             //factor -->(exp)|number|identifier
             Node factor = new Node(NodeType.Factor);
             var checktop = peek();
-            switch (checktop?.printText) {
+            switch (checktop?.tokenValue) {
                 case "(":
                     factor.AddChild(new Node(value: "("));
                     match();
                     factor.AddChild(exp());
-                    factor.AddChild(new Node(value: ")"));
-                    match();
-                    break;
-                case "Number":
-                    if (checktop?.tokenType == TokenType.Number)
+                    if (peek()?.tokenValue == ")")
                     {
-                        factor.AddChild(new Node(value: "Number" + "(" + checktop.tokenValue + ")"));
+                        factor.AddChild(new Node(value: ")"));
                         match();
                     }
-                    else
-                    {
+                    else {
                         throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
-
                     }
                     break;
 
-                case "Identifier" :
-                    if (checktop?.tokenType == TokenType.Identifier)
+				default:
+                    switch (peek()?.tokenType)
                     {
-                        factor.AddChild(new Node(value: "Identifier" + "(" + checktop.tokenValue + ")"));
-                        match();
-                    }
-                    else
-                    {
-                        throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+                        case TokenType.Number:
+                            if (checktop?.tokenType == TokenType.Number)
+                            {
+                                factor.AddChild(new Node(value: "Number" + "(" + checktop.tokenValue + ")"));
+                                match();
+                            }
+                            else
+                            {
+                                throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+
+                            }
+                            break;
+
+                        case TokenType.Identifier:
+                            if (checktop?.tokenType == TokenType.Identifier)
+                            {
+                                factor.AddChild(new Node(value: "Identifier" + "(" + checktop.tokenValue + ")"));
+                                match();
+                            }
+                            else
+                            {
+                                throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+
+                            }
+                            break;
+                        default:
+                            throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax Error");
 
                     }
                     break;
-                default:
-                    throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax Error");
 
             }
             return factor;
