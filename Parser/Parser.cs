@@ -90,11 +90,29 @@ namespace Parser
         private Node term();
         private Node simple_exp();
         private Node factor();
-        private Node mulop();
+        private Node mulop() {
+            Node mulop = new Node(NodeType.Mulop);
+            var checktop = peek(); //check next token 
+            switch (checktop?.tokenValue)
+            {
+                case "*":
+                    mulop.AddChild(new Node(value: "*"));
+                    match();
+                    break;
+                case "/":
+                    mulop.AddChild(new Node(value: "/"));
+                    match();
+                    break;
+                default:
+                    throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " expected (* or /)");
+
+            }
+            return mulop;
+        }
         private Node addop() { 
             Node addop = new Node(NodeType.Addop);
             var checktop = peek(); //check next token 
-            switch (checktop.tokenValue) {
+            switch (checktop?.tokenValue) {
                 case "+":
                     addop.AddChild(new Node(value:"+"));
                     match();
