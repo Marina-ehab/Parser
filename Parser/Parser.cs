@@ -91,7 +91,24 @@ namespace Parser
         private Node simple_exp();
         private Node factor();
         private Node mulop();
-        private Node addop();
+        private Node addop() { 
+            Node addop = new Node(NodeType.Addop);
+            var checktop = peek(); //check next token 
+            switch (checktop.tokenValue) {
+                case "+":
+                    addop.AddChild(new Node(value:"+"));
+                    match();
+                    break;
+                case "-":
+                    addop.AddChild(new Node(value: "-"));
+                    match();
+                    break;
+                default:
+                    throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " expected (+ or -)");
+
+            }
+            return addop;
+        }
         private Node comparisonop();
     }
 }

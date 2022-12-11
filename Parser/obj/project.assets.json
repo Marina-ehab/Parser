@@ -8,19 +8,19 @@
     "net6.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\pc\\.nuget\\packages\\": {}
+    "C:\\Users\\Zezo\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\E_But_FAST\\Senior-2\\Compilers\\Parser\\Parser\\Parser.csproj",
+      "projectUniqueName": "C:\\Users\\Zezo\\Desktop\\Compliers\\Parser\\Parser.csproj",
       "projectName": "Parser",
-      "projectPath": "C:\\E_But_FAST\\Senior-2\\Compilers\\Parser\\Parser\\Parser.csproj",
-      "packagesPath": "C:\\Users\\pc\\.nuget\\packages\\",
-      "outputPath": "C:\\E_But_FAST\\Senior-2\\Compilers\\Parser\\Parser\\obj\\",
+      "projectPath": "C:\\Users\\Zezo\\Desktop\\Compliers\\Parser\\Parser.csproj",
+      "packagesPath": "C:\\Users\\Zezo\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Zezo\\Desktop\\Compliers\\Parser\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\pc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Zezo\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -63,7 +63,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }
