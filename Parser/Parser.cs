@@ -88,6 +88,7 @@ namespace Parser
         private Node if_stmt();
         private Node exp();
         private Node term() { 
+            //term --> factor {mulop factor }
             Node term = new Node(NodeType.Term);
             term.AddChild(factor());
             while (peek()?.tokenValue == "addop")
@@ -99,6 +100,7 @@ namespace Parser
             return term;
         }
         private Node simple_exp() { 
+            //simple exp--> term {addop term}
             Node simple_exp = new Node(NodeType.SimpleExpression );
             simple_exp.AddChild(term());
             while (peek()?.tokenValue == "addop") { 
@@ -108,8 +110,51 @@ namespace Parser
             }
             return simple_exp;
         }
-        private Node factor();
+        private Node factor() { 
+            //factor -->(exp)|number|identifier
+            Node factor = new Node(NodeType.Factor);
+            var checktop = peek();
+            switch (checktop?.printText) {
+                case "(":
+                    factor.AddChild(new Node(value: "("));
+                    match();
+                    factor.AddChild(exp());
+                    factor.AddChild(new Node(value: ")"));
+                    match();
+                    break;
+                case "Number":
+                    if (checktop?.tokenType == TokenType.Number)
+                    {
+                        factor.AddChild(new Node(value: "Number" + "(" + checktop.tokenValue + ")"));
+                        match();
+                    }
+                    else
+                    {
+                        throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+
+                    }
+                    break;
+
+                case "Identifier" :
+                    if (checktop?.tokenType == TokenType.Identifier)
+                    {
+                        factor.AddChild(new Node(value: "Identifier" + "(" + checktop.tokenValue + ")"));
+                        match();
+                    }
+                    else
+                    {
+                        throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+
+                    }
+                    break;
+                default:
+                    throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax Error");
+
+            }
+            return factor;
+        }
         private Node mulop() {
+            //mulop --> *|/
             Node mulop = new Node(NodeType.Mulop);
             var checktop = peek(); 
             switch (checktop?.tokenValue)
@@ -129,6 +174,7 @@ namespace Parser
             return mulop;
         }
         private Node addop() { 
+            //addop --> +|-
             Node addop = new Node(NodeType.Addop);
             var checktop = peek(); //check next token 
             switch (checktop?.tokenValue) {
