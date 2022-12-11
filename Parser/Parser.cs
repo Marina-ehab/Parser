@@ -100,27 +100,27 @@ namespace Parser
             Node exp = new Node(NodeType.Expression);
             // exp -> simple_exp
             exp.AddChild(simple_exp());
-            
+
             // exp -> simple_exp [comparisonOp simple_exp]
             var top = peek();
             if (top?.tokenValue == "<" || top?.tokenValue == "=")
-            {   
+            {
                 // we can make the implementation of comparisonOp here
                 // but to keep up with the convention, It's implemented in a dedicated function
                 exp.AddChild(comparisonop());
                 exp.AddChild(simple_exp());
             }
-                
+
             return exp;
         }
-        
+
         private Node comparisonop()
         {
             Node comparisonop = new Node(NodeType.ComparisonOp);
             var top = peek();
 
             // ComparisonOp -> < | =
-            switch(top?.tokenValue)
+            switch (top?.tokenValue)
             {
                 case "<":
                     comparisonop.AddChild(new Node(value: ">"));
@@ -206,7 +206,7 @@ namespace Parser
 
             if (top.tokenType == TokenType.Identifier)
             {
-                read_node.AddChild(new Node(value: ("Identifier (" + top.tokenValue + ")")));
+                read_node.AddChild(new Node(NodeType.Identifier, top.tokenValue));
                 match();
             }
             else
@@ -300,32 +300,37 @@ namespace Parser
             return if_node;
 
         }
-        private Node term() { 
+        private Node term()
+        {
             //term --> factor {mulop factor }
             Node term = new Node(NodeType.Term);
             term.AddChild(factor());
-            while (peek()?.tokenValue == "*"|| peek()?.tokenValue == "/")
+            while (peek()?.tokenValue == "*" || peek()?.tokenValue == "/")
             {
                 term.AddChild(mulop());
                 term.AddChild(factor());
             }
             return term;
         }
-        private Node simple_exp() { 
+        private Node simple_exp()
+        {
             //simple exp--> term {addop term}
-            Node simple_exp = new Node(NodeType.SimpleExpression );
+            Node simple_exp = new Node(NodeType.SimpleExpression);
             simple_exp.AddChild(term());
-            while (peek()?.tokenValue == "+"|| peek()?.tokenValue == "-") { 
+            while (peek()?.tokenValue == "+" || peek()?.tokenValue == "-")
+            {
                 simple_exp.AddChild(addop());
                 simple_exp.AddChild(term());
             }
             return simple_exp;
         }
-        private Node factor() { 
+        private Node factor()
+        {
             //factor -->(exp)|number|identifier
             Node factor = new Node(NodeType.Factor);
             var checktop = peek();
-            switch (checktop?.tokenValue) {
+            switch (checktop?.tokenValue)
+            {
                 case "(":
                     factor.AddChild(new Node(value: "("));
                     match();
@@ -335,18 +340,19 @@ namespace Parser
                         factor.AddChild(new Node(value: ")"));
                         match();
                     }
-                    else {
+                    else
+                    {
                         throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
                     }
                     break;
 
-				default:
+                default:
                     switch (peek()?.tokenType)
                     {
                         case TokenType.Number:
                             if (checktop?.tokenType == TokenType.Number)
                             {
-                                new Node(type: NodeType.Number, value: checktop.tokenValue);
+                                factor.AddChild(new Node(type: NodeType.Number, value: checktop.tokenValue));
                                 match();
                             }
                             else
@@ -359,7 +365,7 @@ namespace Parser
                         case TokenType.Identifier:
                             if (checktop?.tokenType == TokenType.Identifier)
                             {
-                                new Node(type: NodeType.Identifier, value: checktop.tokenValue);
+                                factor.AddChild(new Node(NodeType.Identifier, checktop.tokenValue));
                                 match();
                             }
                             else
@@ -377,10 +383,11 @@ namespace Parser
             }
             return factor;
         }
-        private Node mulop() {
+        private Node mulop()
+        {
             //mulop --> *|/
             Node mulop = new Node(NodeType.Mulop);
-            var checktop = peek(); 
+            var checktop = peek();
             switch (checktop?.tokenValue)
             {
                 case "*":
@@ -397,13 +404,15 @@ namespace Parser
             }
             return mulop;
         }
-        private Node addop() { 
+        private Node addop()
+        {
             //addop --> +|-
             Node addop = new Node(NodeType.Addop);
             var checktop = peek(); //check next token 
-            switch (checktop?.tokenValue) {
+            switch (checktop?.tokenValue)
+            {
                 case "+":
-                    addop.AddChild(new Node(value:"+"));
+                    addop.AddChild(new Node(value: "+"));
                     match();
                     break;
                 case "-":
