@@ -42,7 +42,7 @@ namespace Parser
             while (peek()?.tokenValue == ";")
             {
                 match();
-                stmt_sequence.AddChild(new Node(value:";"));
+                stmt_sequence.AddChild(new Node(value: ";"));
                 stmt_sequence.AddChild(statement());
             }
             return stmt_sequence;
@@ -82,28 +82,28 @@ namespace Parser
         }
 
         private Node assign_stmt()
-        { 
+        {
             Node assign_stmt = new Node(NodeType.AssignStmt);
-            var top=peek();
-            if(top?.tokenType == TokenType.Identifier)
-            { 
-                assign_stmt.AddChild(new Node(value:"Identifier"+"("+top.tokenValue)+")");
+            var top = peek();
+            if (top?.tokenType == TokenType.Identifier)
+            {
+                assign_stmt.AddChild(new Node(NodeType.Identifier, top.tokenValue));
                 match();
             }
             else
-            { 
-               throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Assigning non identifier");
-                   
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Assigning non identifier");
+
             }
             top = peek();
-            if(top.tokenType==TokenType.Symbol && top.tokenValue==":=")
-            { 
-                assign_stmt.AddChild(new Node(value:":="));
+            if (top.tokenType == TokenType.Symbol && top.tokenValue == ":=")
+            {
+                assign_stmt.AddChild(new Node(value: ":="));
                 match();
             }
             else
-            { 
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". use := for assignment");             
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". use := for assignment");
             }
             /*maybe a bug*/
             assign_stmt.AddChild(exp());
@@ -112,78 +112,78 @@ namespace Parser
         }
 
         private Node write_stmt()
-        { 
-            Node write_node=new Node(NodeType.WriteStmt);
+        {
+            Node write_node = new Node(NodeType.WriteStmt);
 
-            var top=peek();
-            
-            if(top.tokenValue=="write")
-            { 
-                write_node.AddChild(new Node(value:"write"));
+            var top = peek();
+
+            if (top.tokenValue == "write")
+            {
+                write_node.AddChild(new Node(value: "write"));
                 match();
             }
             else
-            { 
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");           
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
             }
             write_node.AddChild(exp());
 
             return write_node;
         }
         private Node read_stmt()
-        { 
-            Node read_node=new Node(NodeType.ReadStmt);
+        {
+            Node read_node = new Node(NodeType.ReadStmt);
 
-            var top=peek();
+            var top = peek();
 
-            if(top.tokenValue=="read")
-            { 
-                read_node.AddChild(new Node(value:"read"));
-                match();
-            }
-            else
-            { 
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-                   
-            }
-            top=peek();
-
-            if(top.tokenType==TokenType.Identifier)
-            { 
-                read_node.AddChild(new Node(value:("Identifier ("+top.tokenValue+")")));
-                match();
-            }
-            else
-            { 
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Can't read Non-identifiers");
-                   
-            }
-            return read_node;
-        }
-        private Node repeat_stmt()
-        { 
-            Node repeat_node=new Node(NodeType.RepeatStmt);
-            var top=peek();
-            if(top.tokenValue=="repeat")
-            { 
-                repeat_node.AddChild(new Node(value:"repeat"));
+            if (top.tokenValue == "read")
+            {
+                read_node.AddChild(new Node(value: "read"));
                 match();
             }
             else
             {
                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-                   
-            }
-            repeat_node.AddChild(stmt_sequence());
 
-            top=peek();
-            if(top.tokenValue=="until")
-            { 
-                repeat_node.AddChild(new Node(value:"until");
+            }
+            top = peek();
+
+            if (top.tokenType == TokenType.Identifier)
+            {
+                read_node.AddChild(new Node(value: ("Identifier (" + top.tokenValue + ")")));
                 match();
             }
             else
-            { 
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Can't read Non-identifiers");
+
+            }
+            return read_node;
+        }
+        private Node repeat_stmt()
+        {
+            Node repeat_node = new Node(NodeType.RepeatStmt);
+            var top = peek();
+            if (top.tokenValue == "repeat")
+            {
+                repeat_node.AddChild(new Node(value: "repeat"));
+                match();
+            }
+            else
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+
+            }
+            repeat_node.AddChild(stmt_sequence());
+
+            top = peek();
+            if (top.tokenValue == "until")
+            {
+                repeat_node.AddChild(new Node(value: "until"));
+                match();
+            }
+            else
+            {
                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error(expected until)");
             }
             repeat_node.AddChild(exp());
@@ -193,27 +193,27 @@ namespace Parser
         }
         private Node if_stmt()
         {
-            Node if_node =new Node(NodeType.IfStmt);
-            var top=peek();
+            Node if_node = new Node(NodeType.IfStmt);
+            var top = peek();
             //if part
-            if(top.tokenValue=="if")
-            { 
+            if (top.tokenValue == "if")
+            {
                 match();
-                if_node.AddChild(new Node(value:"if"));
+                if_node.AddChild(new Node(value: "if"));
             }
             else
-            { 
-              throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
             }
             //call exp procedure
-            if_node.AddChild(exp());  
+            if_node.AddChild(exp());
 
             //then part
-            top.peek();
-            if(top.tokenValue=="then")
-            { 
+            top = peek();
+            if (top.tokenValue == "then")
+            {
                 match();
-                if_node.AddChild(new Node(value:"then"));
+                if_node.AddChild(new Node(value: "then"));
             }
             else
             {
@@ -222,24 +222,24 @@ namespace Parser
             //stmt-seq call
             if_node.AddChild(stmt_sequence());
             //else part is optional either else or end 
-            top=peek();
-            if(top.tokenValue=="else")
-            { 
-                if_node.AddChild(new Node(value:"else"));
+            top = peek();
+            if (top.tokenValue == "else")
+            {
+                if_node.AddChild(new Node(value: "else"));
                 match();
                 if_node.AddChild(stmt_sequence());
             }
-            top.peek(); //redundant if we dont have an else
+            top = peek(); //redundant if we dont have an else
             //end part
-            if(top.tokenValue=="end")
+            if (top.tokenValue == "end")
             {
-                if_node.AddChild(new Node(value:"end"));
+                if_node.AddChild(new Node(value: "end"));
                 match();
             }
             else
-            { 
+            {
                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error(missing end)");
-            
+
             }
             return if_node;
 
