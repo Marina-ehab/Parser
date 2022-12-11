@@ -88,7 +88,16 @@ namespace Parser
         private Node if_stmt();
         private Node exp();
         private Node term();
-        private Node simple_exp();
+        private Node simple_exp() { 
+            Node simple_exp = new Node(NodeType.SimpleExpression );
+            simple_exp.AddChild(term());
+            while (peek()?.tokenValue == "addop") { 
+                match();
+                simple_exp.AddChild(new Node(value: "addop"));
+                simple_exp.AddChild(new Node(value: "term"));
+            }
+            return simple_exp;
+        }
         private Node factor();
         private Node mulop() {
             Node mulop = new Node(NodeType.Mulop);
