@@ -32,12 +32,15 @@ namespace Parser
         private String? value;
         private NodeType? type;
         private List<Node> children;
-
+        public static string output;
         public Node(NodeType? type = null, String? value = null)
         {
             this.value = value;
             this.type = type;
             this.children = new List<Node>();
+            
+            // just for debugging
+            if (value != null) output += value + " ";
         }
         
         public void AddChild(Node child)
