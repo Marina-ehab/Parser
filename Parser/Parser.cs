@@ -245,11 +245,122 @@ namespace Parser
 
         }
         private Node exp();
-        private Node term();
-        private Node simple_exp();
-        private Node factor();
-        private Node mulop();
-        private Node addop();
+        private Node term() { 
+            //term --> factor {mulop factor }
+            Node term = new Node(NodeType.Term);
+            term.AddChild(factor());
+            while (peek()?.tokenValue == "*"|| peek()?.tokenValue == "/")
+            {
+                term.AddChild(mulop());
+                term.AddChild(factor());
+            }
+            return term;
+        }
+        private Node simple_exp() { 
+            //simple exp--> term {addop term}
+            Node simple_exp = new Node(NodeType.SimpleExpression );
+            simple_exp.AddChild(term());
+            while (peek()?.tokenValue == "+"|| peek()?.tokenValue == "-") { 
+                simple_exp.AddChild(addop());
+                simple_exp.AddChild(term());
+            }
+            return simple_exp;
+        }
+        private Node factor() { 
+            //factor -->(exp)|number|identifier
+            Node factor = new Node(NodeType.Factor);
+            var checktop = peek();
+            switch (checktop?.tokenValue) {
+                case "(":
+                    factor.AddChild(new Node(value: "("));
+                    match();
+                    factor.AddChild(exp());
+                    if (peek()?.tokenValue == ")")
+                    {
+                        factor.AddChild(new Node(value: ")"));
+                        match();
+                    }
+                    else {
+                        throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+                    }
+                    break;
+
+				default:
+                    switch (peek()?.tokenType)
+                    {
+                        case TokenType.Number:
+                            if (checktop?.tokenType == TokenType.Number)
+                            {
+                                new Node(type: NodeType.Number, value: checktop.tokenValue);
+                                match();
+                            }
+                            else
+                            {
+                                throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+
+                            }
+                            break;
+
+                        case TokenType.Identifier:
+                            if (checktop?.tokenType == TokenType.Identifier)
+                            {
+                                new Node(type: NodeType.Identifier, value: checktop.tokenValue);
+                                match();
+                            }
+                            else
+                            {
+                                throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax error");
+
+                            }
+                            break;
+                        default:
+                            throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " Syntax Error");
+
+                    }
+                    break;
+
+            }
+            return factor;
+        }
+        private Node mulop() {
+            //mulop --> *|/
+            Node mulop = new Node(NodeType.Mulop);
+            var checktop = peek(); 
+            switch (checktop?.tokenValue)
+            {
+                case "*":
+                    mulop.AddChild(new Node(value: "*"));
+                    match();
+                    break;
+                case "/":
+                    mulop.AddChild(new Node(value: "/"));
+                    match();
+                    break;
+                default:
+                    throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " expected (* or /)");
+
+            }
+            return mulop;
+        }
+        private Node addop() { 
+            //addop --> +|-
+            Node addop = new Node(NodeType.Addop);
+            var checktop = peek(); //check next token 
+            switch (checktop?.tokenValue) {
+                case "+":
+                    addop.AddChild(new Node(value:"+"));
+                    match();
+                    break;
+                case "-":
+                    addop.AddChild(new Node(value: "-"));
+                    match();
+                    break;
+                default:
+                    throw new Exception("Error at line " + checktop?.line + " near column " + checktop?.column + " expected (+ or -)");
+
+            }
+            return addop;
+        }
         private Node comparisonop();
     }
 }
