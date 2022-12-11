@@ -123,7 +123,7 @@ namespace Parser
             switch (top?.tokenValue)
             {
                 case "<":
-                    comparisonop.AddChild(new Node(value: ">"));
+                    comparisonop.AddChild(new Node(value: "<"));
                     match();
                     break;
                 case "=":
