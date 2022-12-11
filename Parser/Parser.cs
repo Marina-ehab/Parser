@@ -133,7 +133,7 @@ namespace Parser
                         case TokenType.Number:
                             if (checktop?.tokenType == TokenType.Number)
                             {
-                                factor.AddChild(new Node(value: "Number" + "(" + checktop.tokenValue + ")"));
+                                new Node(type: NodeType.Number, value: checktop.tokenValue);
                                 match();
                             }
                             else
@@ -146,7 +146,7 @@ namespace Parser
                         case TokenType.Identifier:
                             if (checktop?.tokenType == TokenType.Identifier)
                             {
-                                factor.AddChild(new Node(value: "Identifier" + "(" + checktop.tokenValue + ")"));
+                                new Node(type: NodeType.Identifier, value: checktop.tokenValue);
                                 match();
                             }
                             else
