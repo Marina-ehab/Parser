@@ -92,7 +92,7 @@ namespace Parser
         private Node factor();
         private Node mulop() {
             Node mulop = new Node(NodeType.Mulop);
-            var checktop = peek(); //check next token 
+            var checktop = peek(); 
             switch (checktop?.tokenValue)
             {
                 case "*":
