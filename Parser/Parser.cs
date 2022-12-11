@@ -32,13 +32,19 @@ namespace Parser
         private Node? program()
         {
             Node program = new Node(NodeType.Program);
+
+            // program -> stmt_sequence
             program.AddChild(stmt_sequence());
             return program;
         }
         private Node stmt_sequence()
         {
             Node stmt_sequence = new Node(NodeType.StmtSequence);
+
+            // stmt-sequence -> statement
             stmt_sequence.AddChild(statement());
+
+            // stmt-sequence -> statement {; statement}
             while (peek()?.tokenValue == ";")
             {
                 match();
@@ -136,7 +142,7 @@ namespace Parser
                     match();
                     break;
                 default:
-                    // actually this line is impossible to reach, as we checked on the top in exp() before calling compariosnop()
+                    // actually this line is impossible to reach, as we checked top value in exp() before calling compariosnop()
                     // but you know IT'S THE LAW
                     throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Colon without equal sign");
             }
