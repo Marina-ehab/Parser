@@ -88,7 +88,7 @@ namespace Parser
                             break;
                         default:
                             // an Exception is thrown when there's a syntax error 
-                            throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
                     }
                     break;
             }
@@ -332,8 +332,8 @@ namespace Parser
         {
             //factor -->(exp)|number|identifier
             Node factor = new Node(NodeType.Factor);
-            var checktop = peek();
-            switch (checktop?.tokenValue)
+            var top = peek();
+            switch (top?.tokenValue)
             {
                 case "(":
                     factor.AddChild(new Node(value: "("));
@@ -355,9 +355,9 @@ namespace Parser
                     switch (peek()?.tokenType)
                     {
                         case TokenType.Number:
-                            if (checktop?.tokenType == TokenType.Number)
+                            if (top?.tokenType == TokenType.Number)
                             {
-                                factor.AddChild(new Node(type: NodeType.Number, value: checktop.tokenValue));
+                                factor.AddChild(new Node(type: NodeType.Number, value: top.tokenValue));
                                 match();
                             }
                             else
@@ -369,9 +369,9 @@ namespace Parser
                             break;
 
                         case TokenType.Identifier:
-                            if (checktop?.tokenType == TokenType.Identifier)
+                            if (top?.tokenType == TokenType.Identifier)
                             {
-                                factor.AddChild(new Node(NodeType.Identifier, checktop.tokenValue));
+                                factor.AddChild(new Node(NodeType.Identifier, top.tokenValue));
                                 match();
                             }
                             else
@@ -395,8 +395,8 @@ namespace Parser
         {
             //mulop --> *|/
             Node mulop = new Node(NodeType.Mulop);
-            var checktop = peek();
-            switch (checktop?.tokenValue)
+            var top = peek();
+            switch (top?.tokenValue)
             {
                 case "*":
                     mulop.AddChild(new Node(value: "*"));
@@ -417,8 +417,8 @@ namespace Parser
         {
             //addop --> +|-
             Node addop = new Node(NodeType.Addop);
-            var checktop = peek(); //check next token 
-            switch (checktop?.tokenValue)
+            var top = peek(); //check next token 
+            switch (top?.tokenValue)
             {
                 case "+":
                     addop.AddChild(new Node(value: "+"));
