@@ -29,9 +29,9 @@ namespace Parser
     
     internal class Node
     {
-        private String? value;
-        private NodeType? type;
-        private List<Node> children;
+        public String? value;
+        public NodeType? type;
+        public List<Node> children;
         public static string output;
         public Node(NodeType? type = null, String? value = null)
         {
