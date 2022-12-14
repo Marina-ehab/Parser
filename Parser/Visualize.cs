@@ -8,15 +8,30 @@ using DotNetGraph.Node;
 using DotNetGraph.Edge;
 using DotNetGraph.Extensions;
 using GraphVizNet;
+using System.Drawing;
 
 namespace Parser
 {
     internal class Visualize
     {
-        DotNode graphBuilder(Node head, ref DotGraph dotGraph)
+        static int counter = 0;
+        public DotNode graphBuilder(Node head, ref DotGraph dotGraph)
         {
+            counter++;
             if(head.children.Count == 0) {
-                return null;
+                DotNode node1 = new DotNode(""+counter+"")
+                {
+                    Shape = DotNodeShape.Ellipse,
+                    Label = "nullll!",
+                    FillColor = Color.Coral,
+                    FontColor = Color.Black,
+                    Style = DotNodeStyle.Dotted,
+                    Width = 0.5f,
+                    Height = 0.5f,
+                    PenWidth = 1.5f
+                };
+                dotGraph.Elements.Add(node1);
+                return node1;
             }
 
             
@@ -28,12 +43,12 @@ namespace Parser
             {
                 List<DotNode> nodes = new List<DotNode>();
                 for (int i = 0; i < head.children.Count; i++) { 
-                    if(head.type == NodeType.Statement)
+                    if(head.children[i].type == NodeType.Statement)
                     {
                         nodes.Add(graphBuilder(head.children[i], ref dotGraph));
                     }
                 }
-                for (int i = 1; i < nodes.Count ; i++) {
+                for (int i = 0; i < nodes.Count -1 ; i++) {
                     DotEdge edge = new DotEdge(nodes[i], nodes[i+1]);
                     dotGraph.Elements.Add(edge);
                 }
@@ -45,7 +60,7 @@ namespace Parser
             }
             else if (head.type == NodeType.IfStmt)
             {
-                DotNode ifNode = new DotNode("if")
+                DotNode ifNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Rectangle,
                     Label = "if",
@@ -56,9 +71,9 @@ namespace Parser
                     Height = 0.5f,
                 };
                 dotGraph.Elements.Add(ifNode);
-                for (int i = 1; i < head.children.Count ; i++)
+                for (int i = 0; i < head.children.Count  ; i++)
                 {
-                    if (head.type == NodeType.Expression || head.type == NodeType.StmtSequence)
+                    if (head.children[i].type == NodeType.Expression || head.children[i].type == NodeType.StmtSequence)
                     {
                         DotEdge edge = new DotEdge(ifNode, graphBuilder(head.children[i], ref dotGraph));
                         dotGraph.Elements.Add(edge);
@@ -68,9 +83,9 @@ namespace Parser
             }
             else if( head.type == NodeType.Expression)
             {
-                DotNode expNode = new DotNode("exp") {
+                DotNode expNode = new DotNode("" + counter + "") {
                     Shape = DotNodeShape.Ellipse,
-                    Label = "My node!",
+                    Label = "exp!",
                     FillColor = Color.Coral,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Dotted,
@@ -79,14 +94,28 @@ namespace Parser
                     PenWidth = 1.5f
                 };
                 dotGraph.Elements.Add(expNode);
-                return expNode;
+                return graphBuilder(head.children[0], ref dotGraph);
+            }
+            else {
+                DotNode enode = new DotNode(""+counter+"")
+                {
+                    Shape = DotNodeShape.Ellipse,
+                    Label = "else node!",
+                    FillColor = Color.Coral,
+                    FontColor = Color.Black,
+                    Style = DotNodeStyle.Dotted,
+                    Width = 0.5f,
+                    Height = 0.5f,
+                    PenWidth = 1.5f
+                };
+                dotGraph.Elements.Add(enode);
+                return graphBuilder(head.children[0], ref dotGraph);
             }
 
-
-            DotNode node = new DotNode("gen")
+            DotNode node = new DotNode("" + counter + "")
             {
                 Shape = DotNodeShape.Ellipse,
-                Label = "My node!",
+                Label = "md5lsh!",
                 FillColor = Color.Coral,
                 FontColor = Color.Black,
                 Style = DotNodeStyle.Dotted,
@@ -96,6 +125,7 @@ namespace Parser
             };
             dotGraph.Elements.Add(node);
             return node;
+
 
         }
     }
