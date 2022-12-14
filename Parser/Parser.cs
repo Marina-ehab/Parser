@@ -35,6 +35,13 @@ namespace Parser
 
             // program -> stmt_sequence
             program.AddChild(stmt_sequence());
+
+            // throws an exception if the program is not finished
+            var top = peek();
+            if (top?.tokenValue != null)
+            {
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column);
+            }
             return program;
         }
         private Node stmt_sequence()
@@ -298,7 +305,6 @@ namespace Parser
             else
             {
                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-
 
             }
             return if_node;
