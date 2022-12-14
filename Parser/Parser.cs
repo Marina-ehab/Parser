@@ -21,6 +21,10 @@ namespace Parser
         private Token? peek()
         {
             Token? top = scanner.GetNextToken();
+            
+            // handles the case when peeking at the end of file
+            if (top is null) return null;
+            
             scanner.GoBackTokens(1);
             return top;
         }
@@ -95,7 +99,7 @@ namespace Parser
                             break;
                         default:
                             // an Exception is thrown when there's a syntax error 
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                            throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
                     }
                     break;
             }
@@ -199,7 +203,7 @@ namespace Parser
 
             var top = peek();
 
-            if (top.tokenValue == "read")
+            if (top?.tokenValue == "read")
             {
                 read_node.AddChild(new Node(value: "read"));
                 match();
@@ -211,7 +215,7 @@ namespace Parser
             }
             top = peek();
 
-            if (top.tokenType == TokenType.Identifier)
+            if (top?.tokenType == TokenType.Identifier)
             {
                 read_node.AddChild(new Node(NodeType.Identifier, top.tokenValue));
                 match();
@@ -227,7 +231,7 @@ namespace Parser
         {
             Node repeat_node = new Node(NodeType.RepeatStmt);
             var top = peek();
-            if (top.tokenValue == "repeat")
+            if (top?.tokenValue == "repeat")
             {
                 repeat_node.AddChild(new Node(value: "repeat"));
                 match();
@@ -240,7 +244,7 @@ namespace Parser
             repeat_node.AddChild(stmt_sequence());
 
             top = peek();
-            if (top.tokenValue == "until")
+            if (top?.tokenValue == "until")
             {
                 repeat_node.AddChild(new Node(value: "until"));
                 match();
@@ -260,7 +264,7 @@ namespace Parser
             Node if_node = new Node(NodeType.IfStmt);
             var top = peek();
             //if part
-            if (top.tokenValue == "if")
+            if (top?.tokenValue == "if")
             {
                 match();
                 if_node.AddChild(new Node(value: "if"));
@@ -275,7 +279,7 @@ namespace Parser
 
             //then part
             top = peek();
-            if (top.tokenValue == "then")
+            if (top?.tokenValue == "then")
             {
                 match();
                 if_node.AddChild(new Node(value: "then"));
@@ -289,7 +293,7 @@ namespace Parser
             if_node.AddChild(stmt_sequence());
             //else part is optional either else or end 
             top = peek();
-            if (top.tokenValue == "else")
+            if (top?.tokenValue == "else")
             {
                 if_node.AddChild(new Node(value: "else"));
                 match();
@@ -297,7 +301,7 @@ namespace Parser
             }
             top = peek(); //redundant if we dont have an else
             //end part
-            if (top.tokenValue == "end")
+            if (top?.tokenValue == "end")
             {
                 if_node.AddChild(new Node(value: "end"));
                 match();
