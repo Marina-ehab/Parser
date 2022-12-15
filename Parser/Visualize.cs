@@ -15,14 +15,15 @@ namespace Parser
     internal class Visualize
     {
         static int counter = 0;
-        public DotNode graphBuilder(Node head, ref DotGraph dotGraph)
+        public static DotNode graphBuilder(Node head, ref DotGraph dotGraph)
         {
             counter++;
-            if(head.children.Count == 0) {
-                DotNode node1 = new DotNode(""+counter+"")
+            if (head.children.Count == 0)
+            {
+                DotNode node1 = new DotNode("" + counter + "")
                 {
-                    Shape = DotNodeShape.Ellipse,
-                    Label = "nullll!",
+                    Shape = DotNodeShape.Rectangle,
+                    Label = "Terminal",
                     FillColor = Color.Coral,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Dotted,
@@ -34,8 +35,8 @@ namespace Parser
                 return node1;
             }
 
-            
-            if(head.type == NodeType.Program)
+
+            if (head.type == NodeType.Program)
             {
                 return graphBuilder(head.children[0], ref dotGraph);
             }
@@ -52,6 +53,7 @@ namespace Parser
                     DotEdge edge = new DotEdge(nodes[i], nodes[i+1]);
                     dotGraph.Elements.Add(edge);
                 }
+                return nodes[0];
 
             }
             else if(head.type == NodeType.Statement)
@@ -84,8 +86,8 @@ namespace Parser
             else if( head.type == NodeType.Expression)
             {
                 DotNode expNode = new DotNode("" + counter + "") {
-                    Shape = DotNodeShape.Ellipse,
-                    Label = "exp!",
+                    Shape = DotNodeShape.Rectangle,
+                    Label = "exp",
                     FillColor = Color.Coral,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Dotted,
@@ -96,11 +98,26 @@ namespace Parser
                 dotGraph.Elements.Add(expNode);
                 return graphBuilder(head.children[0], ref dotGraph);
             }
+            else if(head.type == NodeType.ReadStmt)
+            {
+                DotNode readNode = new DotNode("" + counter + "")
+                {
+                    Shape = DotNodeShape.Rectangle,
+                    Label = "read " + head.children[1].value,
+                    FillColor = Color.White,
+                    FontColor = Color.Black,
+                    Style = DotNodeStyle.Solid,
+                    Width = 0.5f,
+                    Height = 0.5f,
+                };
+                dotGraph.Elements.Add(readNode);
+                return readNode;
+            }
             else {
                 DotNode enode = new DotNode(""+counter+"")
                 {
-                    Shape = DotNodeShape.Ellipse,
-                    Label = "else node!",
+                    Shape = DotNodeShape.Rectangle,
+                    Label = "undefinedNode",
                     FillColor = Color.Coral,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Dotted,
@@ -114,7 +131,7 @@ namespace Parser
 
             DotNode node = new DotNode("" + counter + "")
             {
-                Shape = DotNodeShape.Ellipse,
+                Shape = DotNodeShape.Rectangle,
                 Label = "md5lsh!",
                 FillColor = Color.Coral,
                 FontColor = Color.Black,
