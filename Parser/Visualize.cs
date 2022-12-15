@@ -280,6 +280,29 @@ namespace Parser
                 return numberNode;
 
             }
+            else if(head.type == NodeType.RepeatStmt)
+            {
+                DotNode repeatNode = new DotNode("" + counter + "")
+                {
+                    Shape = DotNodeShape.Rectangle,
+                    Label = "repeat",
+                    FillColor = Color.White,
+                    FontColor = Color.Black,
+                    Style = DotNodeStyle.Solid,
+                    Width = 0.5f,
+                    Height = 0.5f,
+                };
+                dotGraph.Elements.Add(repeatNode);
+                for (int i = 0; i < head.children.Count; i++)
+                {
+                    if (head.children[i].type == NodeType.Expression || head.children[i].type == NodeType.StmtSequence)
+                    {
+                        DotEdge edge = new DotEdge(repeatNode, graphBuilder(head.children[i], ref dotGraph));
+                        dotGraph.Elements.Add(edge);
+                    }
+                }
+                return repeatNode;
+            }
             else
             {
                DotNode enode = new DotNode("" + counter + "")
