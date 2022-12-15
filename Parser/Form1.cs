@@ -1,3 +1,8 @@
+using DotNetGraph;
+using DotNetGraph.Extensions;
+using GraphVizNet;
+using System.Net.Http.Headers;
+
 namespace Parser
 {
     public partial class Form1 : Form
@@ -37,7 +42,21 @@ namespace Parser
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Parser parser = new Parser(textBox1.Text);
+            DotGraph graph = new DotGraph("my Graph");
+            Visualize.graphBuilder(parser.parseTree, ref graph);
+            var dot = graph.Compile(true);
+            var graphViz = new GraphViz();
+            graphViz.LayoutAndRenderDotGraph(dot, "..//image2.png", "png");
 
+            Form imageForm = new Form();
+            PictureBox pictureBox = new PictureBox();
+            pictureBox.Dock = DockStyle.Fill;
+            pictureBox.Image = Image.FromFile("image2.png");
+            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            imageForm.Controls.Add(pictureBox);
+            imageForm.Size = new Size(1000, 700);
+            imageForm.ShowDialog();
         }
 
         private void Form1_Load(object sender, EventArgs e)
