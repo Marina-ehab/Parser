@@ -107,10 +107,13 @@ namespace Parser
                 }
                 return ifNode;
             }
-            else if (head.type == NodeType.Expression)
+           /* else if (head.type == NodeType.Expression)
             {
-                return graphBuilder(head.children[0], ref dotGraph);
-            }
+                
+                    return graphBuilder(head.children[0], ref dotGraph);
+               
+               
+            }*/
             else if (head.type == NodeType.AssignStmt)
             {
                 DotNode assignNode = new DotNode("" + counter + "")
@@ -203,6 +206,8 @@ namespace Parser
                     Width = 0.5f,
                     Height = 0.5f,
                 };
+                dotGraph.Elements.Add(addopNode);
+
                 DotEdge edge1 = new DotEdge(addopNode, graphBuilder(head.children[0], ref dotGraph));
                 dotGraph.Elements.Add(edge1);
                 DotEdge edge2 = new DotEdge(addopNode, graphBuilder(head.children[2], ref dotGraph));
@@ -217,6 +222,7 @@ namespace Parser
                 {
                     return graphBuilder(head.children[0], ref dotGraph);
                 }
+                
                 DotNode mulopNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Ellipse,
@@ -227,6 +233,7 @@ namespace Parser
                     Width = 0.5f,
                     Height = 0.5f,
                 };
+                dotGraph.Elements.Add(mulopNode);
                 DotEdge edge1 = new DotEdge(mulopNode, graphBuilder(head.children[0], ref dotGraph));
                 dotGraph.Elements.Add(edge1);
                 DotEdge edge2 = new DotEdge(mulopNode, graphBuilder(head.children[2], ref dotGraph));
@@ -275,7 +282,7 @@ namespace Parser
             }
             else
             {
-                DotNode enode = new DotNode("" + counter + "")
+               DotNode enode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Rectangle,
                     Label = "undefinedNode",
