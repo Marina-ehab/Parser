@@ -47,6 +47,10 @@ namespace Parser
             Visualize.graphBuilder(parser.parseTree, ref graph);
             var dot = graph.Compile(true);
             var graphViz = new GraphViz();
+            if (File.Exists("..//image2.png"))
+            {
+                File.Delete("..//image2.png");
+            }
             graphViz.LayoutAndRenderDotGraph(dot, "..//image2.png", "png");
 
             Form imageForm = new Form();
