@@ -46,6 +46,7 @@ namespace Parser
             DotGraph graph = new DotGraph("my Graph");
             Visualize.graphBuilder(parser.parseTree, ref graph);
             var dot = graph.Compile(true);
+            File.WriteAllText("myFile.dot", dot); //remove later
             var graphViz = new GraphViz();
             if (File.Exists("..//image2.png"))
             {
