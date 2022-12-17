@@ -191,14 +191,16 @@ namespace Parser
             }
             else if (head.type == NodeType.Expression)
             {
-                if (head.children.Count == 1)
-                {
-                    return graphBuilder(head.children[0], ref dotGraph);
-                }
+                
+                return graphBuilder(head.children[0], ref dotGraph);
+                
+            }
+            else if(head.type == NodeType.ComparisonOp)
+            {
                 DotNode comparisonNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Ellipse,
-                    Label = "op " + head.children[1].children[0].value,
+                    Label = "op " + head.value,
                     FillColor = Color.White,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Solid,
@@ -209,21 +211,24 @@ namespace Parser
 
                 DotEdge edge1 = new DotEdge(comparisonNode, graphBuilder(head.children[0], ref dotGraph));
                 dotGraph.Elements.Add(edge1);
-                DotEdge edge2 = new DotEdge(comparisonNode, graphBuilder(head.children[2], ref dotGraph));
+                DotEdge edge2 = new DotEdge(comparisonNode, graphBuilder(head.children[1], ref dotGraph));
                 dotGraph.Elements.Add(edge2);
 
                 return comparisonNode;
             }
             else if (head.type == NodeType.SimpleExpression)
             {
-                if (head.children.Count == 1)
-                {
-                    return graphBuilder(head.children[0], ref dotGraph);
-                }
+                
+                return graphBuilder(head.children[0], ref dotGraph);
+               
+
+            }
+            else if(head.type == NodeType.Addop)
+            {
                 DotNode addopNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Ellipse,
-                    Label = "op " + head.children[1].children[0].value,
+                    Label = "op " + head.value,
                     FillColor = Color.White,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Solid,
@@ -234,23 +239,23 @@ namespace Parser
 
                 DotEdge edge1 = new DotEdge(addopNode, graphBuilder(head.children[0], ref dotGraph));
                 dotGraph.Elements.Add(edge1);
-                DotEdge edge2 = new DotEdge(addopNode, graphBuilder(head.children[2], ref dotGraph));
+                DotEdge edge2 = new DotEdge(addopNode, graphBuilder(head.children[1], ref dotGraph));
                 dotGraph.Elements.Add(edge2);
 
                 return addopNode;
-
             }
             else if (head.type == NodeType.Term)
             {
-                if (head.children.Count == 1)
-                {
-                    return graphBuilder(head.children[0], ref dotGraph);
-                }
                 
+                return graphBuilder(head.children[0], ref dotGraph);
+               
+            }
+            else if(head.type == NodeType.Mulop)
+            {
                 DotNode mulopNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Ellipse,
-                    Label = "op " + head.children[1].children[0].value,
+                    Label = "op " + head.value,
                     FillColor = Color.White,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Solid,
@@ -260,7 +265,7 @@ namespace Parser
                 dotGraph.Elements.Add(mulopNode);
                 DotEdge edge1 = new DotEdge(mulopNode, graphBuilder(head.children[0], ref dotGraph));
                 dotGraph.Elements.Add(edge1);
-                DotEdge edge2 = new DotEdge(mulopNode, graphBuilder(head.children[2], ref dotGraph));
+                DotEdge edge2 = new DotEdge(mulopNode, graphBuilder(head.children[1], ref dotGraph));
                 dotGraph.Elements.Add(edge2);
 
                 return mulopNode;
