@@ -17,14 +17,13 @@ namespace Parser
             // the final parse tree
             parseTree = program();
         }
-
         private Token? peek()
         {
             Token? top = scanner.GetNextToken();
-            
+
             // handles the case when peeking at the end of file
             if (top is null) return null;
-            
+
             scanner.GoBackTokens(1);
             return top;
         }
@@ -239,7 +238,6 @@ namespace Parser
             else
             {
                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-
             }
             repeat_node.AddChild(stmt_sequence());
 
@@ -252,12 +250,9 @@ namespace Parser
             else
             {
                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-
             }
             repeat_node.AddChild(exp());
-
             return repeat_node;
-
         }
         private Node if_stmt()
         {
@@ -318,24 +313,34 @@ namespace Parser
         {
             //term --> factor {mulop factor }
             Node term = new Node(NodeType.Term);
-            term.AddChild(factor());
+
+            Node temp = factor();
+            Node mulop_node;
             while (peek()?.tokenValue == "*" || peek()?.tokenValue == "/")
             {
-                term.AddChild(mulop());
-                term.AddChild(factor());
+                mulop_node = mulop();
+                mulop_node.AddChild(temp);
+                mulop_node.AddChild(factor());
+                temp = mulop_node;
             }
+            term.AddChild(temp);
             return term;
         }
         private Node simple_exp()
         {
             //simple exp--> term {addop term}
             Node simple_exp = new Node(NodeType.SimpleExpression);
-            simple_exp.AddChild(term());
+
+            Node temp = term();
+            Node addop_node;
             while (peek()?.tokenValue == "+" || peek()?.tokenValue == "-")
             {
-                simple_exp.AddChild(addop());
-                simple_exp.AddChild(term());
+                addop_node = addop();
+                addop_node.AddChild(temp);
+                addop_node.AddChild(term());
+                temp = addop_node;
             }
+            simple_exp.AddChild(temp);
             return simple_exp;
         }
         private Node factor()
@@ -346,18 +351,15 @@ namespace Parser
             switch (top?.tokenValue)
             {
                 case "(":
-                    factor.AddChild(new Node(value: "("));
                     match();
                     factor.AddChild(exp());
                     if (peek()?.tokenValue == ")")
                     {
-                        factor.AddChild(new Node(value: ")"));
                         match();
                     }
                     else
                     {
                         throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-
                     }
                     break;
 
@@ -373,8 +375,6 @@ namespace Parser
                             else
                             {
                                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-
-
                             }
                             break;
 
@@ -387,17 +387,12 @@ namespace Parser
                             else
                             {
                                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-
-
                             }
                             break;
                         default:
                             throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-
-
                     }
                     break;
-
             }
             return factor;
         }
@@ -409,17 +404,15 @@ namespace Parser
             switch (top?.tokenValue)
             {
                 case "*":
-                    mulop.AddChild(new Node(value: "*"));
+                    mulop.value = "*";
                     match();
                     break;
                 case "/":
-                    mulop.AddChild(new Node(value: "/"));
+                    mulop.value = "/";
                     match();
                     break;
                 default:
                     throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-
-
             }
             return mulop;
         }
@@ -431,17 +424,15 @@ namespace Parser
             switch (top?.tokenValue)
             {
                 case "+":
-                    addop.AddChild(new Node(value: "+"));
+                    addop.value = "+";
                     match();
                     break;
                 case "-":
-                    addop.AddChild(new Node(value: "-"));
+                    addop.value = "-";
                     match();
                     break;
                 default:
                     throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
-
-
             }
             return addop;
         }
