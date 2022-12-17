@@ -109,18 +109,18 @@ namespace Parser
         {
             Node exp = new Node(NodeType.Expression);
             // exp -> simple_exp
-            exp.AddChild(simple_exp());
-
+            Node temp=simple_exp();
             // exp -> simple_exp [comparisonOp simple_exp]
             var top = peek();
             if (top?.tokenValue == "<" || top?.tokenValue == "=")
             {
-                // we can make the implementation of comparisonOp here
-                // but to keep up with the convention, It's implemented in a dedicated function
-                exp.AddChild(comparisonop());
-                exp.AddChild(simple_exp());
+               
+                Node compop_node=comparisonop();
+                compop_node.AddChild(temp);
+                compop_node.AddChild(simple_exp());
+                temp=compop_node;
             }
-
+            exp.AddChild(temp);
             return exp;
         }
 
@@ -133,11 +133,13 @@ namespace Parser
             switch (top?.tokenValue)
             {
                 case "<":
-                    comparisonop.AddChild(new Node(value: "<"));
+                    //comparisonop.AddChild(new Node(value: "<"));
+                    comparisonop.value="<";
                     match();
                     break;
                 case "=":
-                    comparisonop.AddChild(new Node(value: "="));
+                    //comparisonop.AddChild(new Node(value: "="));
+                    comparisonop.value="=";
                     match();
                     break;
                 default:
