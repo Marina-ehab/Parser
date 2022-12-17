@@ -68,7 +68,7 @@ namespace Parser
             else if (head.type == NodeType.StmtSequence)
             {
                 DotSubGraph mySubGraph = new DotSubGraph("cluster_" + clusterNo + "");
-                //mySubGraph.SetCustomAttribute("style", "invis");
+                mySubGraph.SetCustomAttribute("style", "invis");
                 clusterNo++;
 
                 List<DotNode> nodes = new List<DotNode>();
@@ -80,22 +80,10 @@ namespace Parser
 
                     }
                 }
-                //counter++;
-                //DotNode invNode = new DotNode("" + counter + "");
-                //counter++;
-                //invNode.SetCustomAttribute("style", "invis");
-                //dotGraph.Elements.Add(invNode);
+               
                 for (int i = 0; i < nodes.Count - 1; i++)
                 {
-                    //clusterNo++;
-                   // DotSubGraph mySubGraph = new DotSubGraph("cluster_" + clusterNo + "");
-                   // mySubGraph.SetCustomAttribute("style", "invis");
-                   // clusterNo++;
-                   // DotEdge invEdge = new DotEdge(invNode, nodes[i]);
-                    //invEdge.SetCustomAttribute("style", "invis");
-                   // dotGraph.Elements.Add(invEdge);
-
-                    //mySubGraph.SetCustomAttribute("rankdir", "LR");
+                    
                     mySubGraph.Elements.Add(nodes[i]);
                     DotEdge edge = new DotEdge(nodes[i], nodes[i + 1]);
 
@@ -104,25 +92,10 @@ namespace Parser
 
                     mySubGraph.Elements.Add(edge);
 
-                   
-
-                    
-
                 }
                 mySubGraph.Elements.Add(nodes[nodes.Count - 1]);
 
                 dotGraph.Elements.Add(mySubGraph);
-                // clusterNo++;
-                // DotSubGraph lastSubGraph = new DotSubGraph("cluster_" + clusterNo + "");
-                //lastSubGraph.SetCustomAttribute("style", "invis");
-
-                //DotEdge linvEdge = new DotEdge(invNode, nodes[nodes.Count - 1]);
-                //linvEdge.SetCustomAttribute("style", "invis");
-                //dotGraph.Elements.Add(linvEdge);
-
-                //mySubGraph.SetCustomAttribute("rankdir", "LR");
-                //lastSubGraph.Elements.Add(nodes[nodes.Count - 1]);
-                //dotGraph.Elements.Add(lastSubGraph);
 
                 return nodes[0];
 
@@ -186,6 +159,17 @@ namespace Parser
                     Height = 0.5f,
                 };
                 dotGraph.Elements.Add(readNode);
+                counter++;
+                DotNode invNode = new DotNode("" + counter + "");
+                invNode.SetCustomAttribute("style", "invis");
+                
+                dotGraph.Elements.Add(invNode);
+
+                DotEdge invEdge = new DotEdge(readNode,invNode);
+                invEdge.SetCustomAttribute("style", "invis");
+
+                dotGraph.Elements.Add(invEdge);
+
                 return readNode;
             }
             else if (head.type == NodeType.WriteStmt)
