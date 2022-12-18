@@ -1,6 +1,7 @@
 using DotNetGraph;
 using DotNetGraph.Extensions;
 using GraphVizNet;
+using System.Diagnostics.Metrics;
 using System.Net.Http.Headers;
 
 namespace Parser
@@ -8,6 +9,7 @@ namespace Parser
     public partial class Form1 : Form
     {
         string text = "";
+        static int counter = 0;
 
         public Form1()
         {
@@ -42,29 +44,72 @@ namespace Parser
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Parser parser = new Parser(textBox1.Text);
-            DotGraph graph = new DotGraph("my Graph");
-            Visualize.graphBuilder(parser.parseTree, ref graph);
-            var dot = graph.Compile(true);
-            File.WriteAllText("myFile.dot", dot); //for debugging purpose
-            var graphViz = new GraphViz();
-            if (File.Exists("..//image2.png"))
+            try
             {
-                File.Delete("..//image2.png");
-            }
-            graphViz.LayoutAndRenderDotGraph(dot, "..//image2.png", "png");
+                if(textBox1.Text == "")
+                {
+                    throw new Exception("Please enter a tiny language valid program");
+                }
+                label2.Text = "";
+                Parser parser = new Parser(textBox1.Text);
+                DotGraph graph = new DotGraph("my Graph");
+                Visualize.graphBuilder(parser.parseTree, ref graph);
+                var dot = graph.Compile(true);
+                var graphViz = new GraphViz();
+                string fileName = "image" + counter++ + ".png";
+                if (File.Exists("..//" + fileName))
+                {
+                    File.Delete("..//" + fileName);
+                }
+                graphViz.LayoutAndRenderDotGraph(dot, "..//" + fileName, "png");
 
-            Form imageForm = new Form();
-            PictureBox pictureBox = new PictureBox();
-            pictureBox.Dock = DockStyle.Fill;
-            pictureBox.Image = Image.FromFile("image2.png");
-            pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-            imageForm.Controls.Add(pictureBox);
-            imageForm.Size = new Size(1000, 700);
-            imageForm.ShowDialog();
+                Scanner scanner = new Scanner(textBox1.Text);
+                String scannerOutput = "";
+
+                Token top = scanner.GetNextToken();
+                while (top is not null) 
+                {  
+                    scannerOutput += top.tokenValue + ", " + top.printText;
+                    scannerOutput += "\r\n";
+                    top = scanner.GetNextToken();
+                }
+                textBox2.Text = scannerOutput;
+
+
+                Form imageForm = new Form();
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.Dock = DockStyle.Fill;
+                pictureBox.Image = Image.FromFile(fileName);
+                pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                imageForm.Controls.Add(pictureBox);
+                imageForm.Size = new Size(1000, 700);
+                imageForm.ShowDialog();
+
+              
+
+            }
+            catch (Exception ex)
+            {
+                label2.Text = ex.Message.ToString();
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+
+        }
+
+        private void vScrollBar2_Scroll(object sender, ScrollEventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }
