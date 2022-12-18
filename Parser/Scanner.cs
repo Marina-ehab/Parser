@@ -87,7 +87,7 @@ namespace Parser
                         {
                             ++index;
                             ++column;
-                            tokens.Add(new Token(TokenType.Symbol, tinyCode[index - 1].ToString(), GetSymbolDict()[tinyCode[index - 1].ToString()], line, column));
+                            tokens.Add(new Token(TokenType.Symbol, tinyCode[index - 1].ToString(), GetSymbolDict()[tinyCode[index - 1].ToString()], line, column - 1));
                             return tokens.Last();
                         }
                         else
@@ -104,7 +104,7 @@ namespace Parser
                             ++index;
                             ++column;
                         }
-                        tokens.Add(new Token(TokenType.Number, lexeme, "Number", line, column));
+                        tokens.Add(new Token(TokenType.Number, lexeme, "Number", line, column - 1));
                         return tokens.Last();
                     case "INID":
                         while (index < tinyCode.Length && ((tinyCode[index] >= 'A' && tinyCode[index] <= 'Z') || (tinyCode[index] >= 'a' && tinyCode[index] <= 'z')))
@@ -115,12 +115,12 @@ namespace Parser
                         }
                         if (GetReservedSet().Contains(lexeme))
                         {
-                            tokens.Add(new Token(TokenType.Reserved, lexeme, lexeme.ToUpper(), line, column));
+                            tokens.Add(new Token(TokenType.Reserved, lexeme, lexeme.ToUpper(), line, column - 1));
                             return tokens.Last();
                         }
                         else
                         {
-                            tokens.Add(new Token(TokenType.Identifier, lexeme, "Identifier", line, column));
+                            tokens.Add(new Token(TokenType.Identifier, lexeme, "Identifier", line, column - 1));
                             return tokens.Last();
                         }
                     case "INASSIGN":
@@ -129,7 +129,7 @@ namespace Parser
                             lexeme += tinyCode[index];
                             ++index;
                             ++column;
-                            tokens.Add(new Token(TokenType.Symbol, lexeme, GetSymbolDict()[lexeme], line, column));
+                            tokens.Add(new Token(TokenType.Symbol, lexeme, GetSymbolDict()[lexeme], line, column - 1));
                             return tokens.Last();
                         }
                         else
