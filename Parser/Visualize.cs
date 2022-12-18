@@ -151,7 +151,7 @@ namespace Parser
                 DotNode readNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Rectangle,
-                    Label = "read \n" + head.children[1].value,
+                    Label = "read \n(" + head.children[1].value + ")",
                     FillColor = Color.White,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Solid,
@@ -200,7 +200,7 @@ namespace Parser
                 DotNode comparisonNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Ellipse,
-                    Label = "op \n" + head.value,
+                    Label = "op \n(" + head.value + ")",
                     FillColor = Color.White,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Solid,
@@ -228,7 +228,7 @@ namespace Parser
                 DotNode addopNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Ellipse,
-                    Label = "op \n" + head.value,
+                    Label = "op \n(" + head.value+ ")",
                     FillColor = Color.White,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Solid,
@@ -255,7 +255,7 @@ namespace Parser
                 DotNode mulopNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Ellipse,
-                    Label = "op \n" + head.value,
+                    Label = "op \n(" + head.value + ")",
                     FillColor = Color.White,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Solid,
@@ -280,7 +280,7 @@ namespace Parser
                 DotNode indentifierNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Ellipse,
-                    Label = "Identifier \n" + head.value,
+                    Label = "Identifier \n(" + head.value + ")",
                     FillColor = Color.Coral,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Solid,
@@ -297,7 +297,7 @@ namespace Parser
                 DotNode numberNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Ellipse,
-                    Label = "Const \n" + head.value,
+                    Label = "Const \n(" + head.value+ ")",
                     FillColor = Color.Coral,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Solid,
