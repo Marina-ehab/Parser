@@ -22,7 +22,7 @@ namespace Parser
             Token? top = scanner.GetNextToken();
 
             // handles the case when peeking at the end of file
-            if (top is null) return null;
+            if (top is null) return new Token(null, null, null, scanner.line, scanner.column);
 
             scanner.GoBackTokens(1);
             return top;

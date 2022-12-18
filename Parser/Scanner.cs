@@ -11,8 +11,8 @@ namespace Parser
         List<Token> tokens = new List<Token>();
         private String tinyCode;
         private int index;
-        private int line = 1;
-        private int column = 1;
+        public int line = 1;
+        public int column = 1;
         private int returnIndex = 0;
         private static Dictionary<String, String>? symbolNameDict = null;
         private static HashSet<String>? reservedWords = null;
