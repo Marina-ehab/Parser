@@ -43,7 +43,7 @@ namespace Parser
             var top = peek();
             if (top?.tokenValue != null)
             {
-                throw new Exception("Error at line " + (top?.line - 1) + " near column " + top?.column);
+                throw new Exception("Error at line " + (top?.line - 1) + " near column " + top?.column + ": Expected end of file, but found " + top?.tokenValue);
             }
             return program;
         }
@@ -98,7 +98,7 @@ namespace Parser
                             break;
                         default:
                             // an Exception is thrown when there's a syntax error 
-                            throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                            throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected statement, but found ;");
                     }
                     break;
             }
@@ -109,16 +109,16 @@ namespace Parser
         {
             Node exp = new Node(NodeType.Expression);
             // exp -> simple_exp
-            Node temp=simple_exp();
+            Node temp = simple_exp();
             // exp -> simple_exp [comparisonOp simple_exp]
             var top = peek();
             if (top?.tokenValue == "<" || top?.tokenValue == "=")
             {
-               
-                Node compop_node=comparisonop();
+
+                Node compop_node = comparisonop();
                 compop_node.AddChild(temp);
                 compop_node.AddChild(simple_exp());
-                temp=compop_node;
+                temp = compop_node;
             }
             exp.AddChild(temp);
             return exp;
@@ -134,18 +134,18 @@ namespace Parser
             {
                 case "<":
                     //comparisonop.AddChild(new Node(value: "<"));
-                    comparisonop.value="<";
+                    comparisonop.value = "<";
                     match();
                     break;
                 case "=":
                     //comparisonop.AddChild(new Node(value: "="));
-                    comparisonop.value="=";
+                    comparisonop.value = "=";
                     match();
                     break;
                 default:
                     // actually this line is impossible to reach, as we checked top value in exp() before calling compariosnop()
                     // but you know IT'S THE LAW
-                    throw new Exception("Error at line " + top?.line + " near column " + top?.column);
+                    throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected comparison operator, but found " + top?.tokenValue);
             }
             return comparisonop;
         }
@@ -160,7 +160,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected identifier, but found " + top?.tokenValue);
 
             }
             top = peek();
@@ -171,7 +171,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected ':=', but found " + top?.tokenValue);
             }
             /*maybe a bug*/
             assign_stmt.AddChild(exp());
@@ -192,7 +192,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected 'write', but found " + top?.tokenValue);
             }
             write_node.AddChild(exp());
 
@@ -211,7 +211,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected 'read', but found " + top?.tokenValue);
 
             }
             top = peek();
@@ -223,7 +223,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected identifier, but found " + top?.tokenValue);
 
             }
             return read_node;
@@ -239,7 +239,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected 'repeat', but found " + top?.tokenValue);
             }
             repeat_node.AddChild(stmt_sequence());
 
@@ -251,7 +251,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected 'until', but found " + top?.tokenValue);
             }
             repeat_node.AddChild(exp());
             return repeat_node;
@@ -268,7 +268,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected 'if', but found " + top?.tokenValue);
 
             }
             //call exp procedure
@@ -283,7 +283,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected 'then', but found " + top?.tokenValue);
 
             }
             //stmt-seq call
@@ -305,7 +305,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected 'end', but found " + top?.tokenValue);
 
             }
             return if_node;
@@ -361,7 +361,7 @@ namespace Parser
                     }
                     else
                     {
-                        throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                        throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected ')', but found " + top?.tokenValue);
                     }
                     break;
 
@@ -376,7 +376,7 @@ namespace Parser
                             }
                             else
                             {
-                                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected number, but found " + top?.tokenValue);
                             }
                             break;
 
@@ -388,11 +388,11 @@ namespace Parser
                             }
                             else
                             {
-                                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected identifier, but found " + top?.tokenValue);
                             }
                             break;
                         default:
-                            throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                            throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected number or identifier, but found " + top?.tokenValue);
                     }
                     break;
             }
@@ -414,7 +414,7 @@ namespace Parser
                     match();
                     break;
                 default:
-                    throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                    throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected '*' or '/', but found " + top?.tokenValue);
             }
             return mulop;
         }
@@ -434,7 +434,7 @@ namespace Parser
                     match();
                     break;
                 default:
-                    throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error");
+                    throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected '+' or '-', but found " + top?.tokenValue);
             }
             return addop;
         }
