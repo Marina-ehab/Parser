@@ -43,7 +43,7 @@ namespace Parser
             var top = peek();
             if (top?.tokenValue != null)
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column);
+                throw new Exception("Error at line " + (top?.line - 1) + " near column " + top?.column);
             }
             return program;
         }
