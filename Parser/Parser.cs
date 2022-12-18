@@ -22,7 +22,7 @@ namespace Parser
             Token? top = scanner.GetNextToken();
 
             // handles the case when peeking at the end of file
-            if (top is null) return new Token(null, null, null, scanner.line, scanner.column);
+            if (top is null) return new Token(null, "nothing", null, scanner.line, scanner.column);
 
             scanner.GoBackTokens(1);
             return top;
@@ -41,7 +41,7 @@ namespace Parser
 
             // throws an exception if the program is not finished
             var top = peek();
-            if (top?.tokenValue != null)
+            if (top?.tokenValue != "nothing")
             {
                 throw new Exception("Error at line " + (top?.line - 1) + " near column " + top?.column + ": Expected end of file, but found " + top?.tokenValue);
             }
@@ -99,7 +99,7 @@ namespace Parser
                         default:
                             // an Exception is thrown when there's a syntax error 
                             // thank you copilot for the suggestion :)
-                            if (top?.tokenValue != null)
+                            if (top?.tokenValue != "nothing")
                             {
                                 throw new Exception("Error at line " + top?.line + " near column " + top?.column + ": Expected statement, but found " + top?.tokenValue);
                             }
