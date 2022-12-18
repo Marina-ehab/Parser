@@ -98,7 +98,15 @@ namespace Parser
                             break;
                         default:
                             // an Exception is thrown when there's a syntax error 
-                            throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected statement, but found ;");
+                            // thank you copilot for the suggestion :)
+                            if (top?.tokenValue != null)
+                            {
+                                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ": Expected statement, but found " + top?.tokenValue);
+                            }
+                            else
+                            {
+                                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ": Expected statement, but found ;");
+                            }
                     }
                     break;
             }
@@ -283,7 +291,7 @@ namespace Parser
             }
             else
             {
-                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected 'then', but found " + top?.tokenValue);
+                throw new Exception("Error at line " + top?.line + " near column " + top?.column + ". Syntax Error: Expected 'then', but found " + top?.tokenType);
 
             }
             //stmt-seq call
