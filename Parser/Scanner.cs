@@ -59,7 +59,7 @@ namespace Parser
                             ++index;
                             ++column;
                         }
-                        if (tinyCode[index] == ' ' || tinyCode[index] == '\t' || tinyCode[index] == '\r')
+                        else if (tinyCode[index] == ' ' || tinyCode[index] == '\t' || tinyCode[index] == '\r')
                         {
                             //do nothing
                         }
