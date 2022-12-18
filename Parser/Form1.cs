@@ -50,6 +50,18 @@ namespace Parser
                 {
                     throw new Exception("Please enter a tiny language valid program");
                 }
+                Scanner scanner = new Scanner(textBox1.Text);
+                String scannerOutput = "";
+
+                Token top = scanner.GetNextToken();
+                while (top is not null)
+                {
+                    scannerOutput += top.tokenValue + ", " + top.printText;
+                    scannerOutput += "\r\n";
+                    top = scanner.GetNextToken();
+                }
+                textBox2.Text = scannerOutput;
+
                 label2.Text = "";
                 Parser parser = new Parser(textBox1.Text);
                 DotGraph graph = new DotGraph("my Graph");
@@ -62,18 +74,6 @@ namespace Parser
                     File.Delete("..//" + fileName);
                 }
                 graphViz.LayoutAndRenderDotGraph(dot, "..//" + fileName, "png");
-
-                Scanner scanner = new Scanner(textBox1.Text);
-                String scannerOutput = "";
-
-                Token top = scanner.GetNextToken();
-                while (top is not null) 
-                {  
-                    scannerOutput += top.tokenValue + ", " + top.printText;
-                    scannerOutput += "\r\n";
-                    top = scanner.GetNextToken();
-                }
-                textBox2.Text = scannerOutput;
 
 
                 Form imageForm = new Form();
