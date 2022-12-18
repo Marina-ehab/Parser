@@ -8,4 +8,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="DotNetGraph" Version="2.7.0" />
+    <PackageReference Include="GraphVizNet" Version="1.0.3" />
+  </ItemGroup>
+
 </Project>
