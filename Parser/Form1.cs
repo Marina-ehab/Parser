@@ -46,10 +46,12 @@ namespace Parser
         {
             try
             {
+                textBox2.Text = "";
                 if(textBox1.Text == "")
                 {
                     throw new Exception("Please enter a tiny language valid program");
                 }
+
                 Scanner scanner = new Scanner(textBox1.Text);
                 String scannerOutput = "";
 
