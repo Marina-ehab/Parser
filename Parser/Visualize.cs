@@ -132,7 +132,7 @@ namespace Parser
                 DotNode assignNode = new DotNode("" + counter + "")
                 {
                     Shape = DotNodeShape.Rectangle,
-                    Label = "assign " + head.children[0].value,
+                    Label = "assign\n (" + head.children[0].value+")",
                     FillColor = Color.Coral,
                     FontColor = Color.Black,
                     Style = DotNodeStyle.Solid,
