@@ -56,8 +56,6 @@ namespace Parser
                                 if (index >= tinyCode.Length)
                                     throw new Exception("Error at line " + line + " near column " + column + ". Unclosed comment");
                             }
-                            ++index;
-                            ++column;
                         }
                         else if (tinyCode[index] == ' ' || tinyCode[index] == '\t' || tinyCode[index] == '\r')
                         {
